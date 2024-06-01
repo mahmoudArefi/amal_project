@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:untitled5/screens/orders_show/orders_show_screen_model.dart';
 
-class OrderShowScreenController extends GetxController {
+class OrdersShowScreenController extends GetxController {
   RxList<OrderOverViewDetails> ordersFromBackEnd = <OrderOverViewDetails>[].obs;
   RxBool isDoneLoading = false.obs;
 

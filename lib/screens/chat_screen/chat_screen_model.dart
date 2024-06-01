@@ -15,7 +15,17 @@ class ChatScreenModel {
     return messagesFromBackEnd;
   }
 
-  static sendTheMessageToServer(){
+  static sendTheMessageToServer(String message) async {}
 
-  }
+  static getBasicInfo() async {}
+}
+
+class ChatBasicInfo {
+  String clientName, firstImageUrl, secondImageUrl;
+
+  ChatBasicInfo({
+    required this.clientName,
+    required this.firstImageUrl,
+    required this.secondImageUrl,
+  });
 }

@@ -86,7 +86,9 @@ flutter:
     - family: ScriptMT
       fonts:
         - asset: assets/fonts/ScriptMTBold.ttf
-
+    - family: Bahnschrift
+      fonts:
+        - asset: assets/fonts/BAHNSCHRIFT.TTF
   # fonts:
   #   - family: Schyler
   #     fonts:

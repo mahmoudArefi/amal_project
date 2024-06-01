@@ -1,31 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:untitled5/common/extension/t_inkwell_extension.dart';
 import 'package:untitled5/common/extension/ui_extension.dart';
+import 'package:untitled5/common/fonts_variable.dart';
+
 import 'package:untitled5/common/widgets/a_text.dart';
+import 'package:untitled5/screens/order_show/order_show_controller.dart';
+import 'package:untitled5/screens/order_show/widgets/image_slider.dart';
 import 'package:untitled5/screens/order_show/widgets/phases_widget.dart';
 
 import '../../common/icons_svg_code.dart';
 import '../../public_files/const.dart';
+import '../orders_show/orders_show_screen_controller.dart';
 
-class OrderShow extends StatelessWidget {
+class OrderShow extends GetView<OrderShowScreenController> {
   const OrderShow({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(OrderShowScreenController());
     return Scaffold(
       body: Column(
         children: [
           SizedBox(
             height: Get.height * 0.4,
             child: MyImageSlider(
-              images: [
-                'https://via.placeholder.com/400x200/FF0000/FFFFFF?text=Image+1',
-                'https://via.placeholder.com/400x200/00FF00/FFFFFF?text=Image+2',
-                'https://via.placeholder.com/400x200/0000FF/FFFFFF?text=Image+3',
-              ],
+              images: controller.orderDetails.imagesURL,
             ),
           ),
           const OrderShowScreenPagenationBar(),
@@ -36,77 +40,135 @@ class OrderShow extends StatelessWidget {
   }
 }
 
-class MyImageSlider extends StatefulWidget {
-  final List<String> images;
-
-  MyImageSlider({required this.images});
-
-  @override
-  _MyImageSliderState createState() => _MyImageSliderState();
-}
-
-class _MyImageSliderState extends State<MyImageSlider> {
-  PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(() {
-      int next = _pageController.page!.round();
-      if (_currentPage != next) {
-        setState(() {
-          _currentPage = next;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+class AppointmentsWidgetShow extends StatelessWidget {
+  const AppointmentsWidgetShow({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.images.length,
-            itemBuilder: (context, index) {
-              return Image.network(
-                widget.images[index],
-                fit: BoxFit.cover,
-              );
-            },
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.images.length, (index) {
-            return Container(
-              margin: const EdgeInsets.all(4.0),
-              child: CircleAvatar(
-                radius: 6.0,
-                backgroundColor:
-                    _currentPage == index ? Colors.blue : Colors.grey,
+    return LayoutBuilder(
+      builder: (context, size) {
+        Widget myRow(String label, String data) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: size.maxHeight * 0.04),
+            child: SizedBox(
+              height: Get.height * 0.06,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: size.maxWidth * 0.3,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: AText(
+                        label,
+                        fontFamily: MyFont.bahnschrift,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Container()),
+                  SizedBox(
+                    width: size.maxWidth * 0.5,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(9)),
+                          color: purple),
+                      child: Center(
+                        child: AText(
+                          data,
+                          fontFamily: MyFont.bahnschrift,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            );
-          }),
-        ),
-      ],
+            ),
+          );
+        }
+
+        return Column(
+          children: [
+            myRow('Delivery Date', 'test'),
+            myRow('Appointment', 'test '),
+            Divider(
+              thickness: 3,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                  width: size.maxWidth*0.5 ,
+                  height: size.maxHeight*0.08,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: AText(
+                      'Previous Appointments',
+                      fontFamily: MyFont.bahnschrift,
+                      fontSize: 10,
+                      //fontWeight :FontWeight.bold
+                    ),
+                  )),
+            ),
+            MyAppointmentsTable(
+              appointments: [
+                AppointmentInfo(date: '2024-06-01', time: '10:00 AM'),
+                AppointmentInfo(date: '2024-06-02', time: '2:30 PM'),
+                // Add more appointment data here
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
-class OrderShowScreenPagenationBar extends StatelessWidget {
+class AppointmentInfo {
+  final String date;
+  final String time;
+
+  AppointmentInfo({required this.date, required this.time});
+}
+
+class MyAppointmentsTable extends StatelessWidget {
+  final List<AppointmentInfo> appointments;
+
+  MyAppointmentsTable({required this.appointments});
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+      columns: [
+        DataColumn(label: AText('Date')),
+        DataColumn(label: AText('Time')),
+      ],
+      rows: appointments.map((info) {
+        return DataRow(cells: [
+          DataCell(Row(
+            children: [
+              Icon(Icons.calendar_today), // Icon for date
+              SizedBox(width: 8), // Add spacing between icon and text
+              Text(info.date), // Display date
+            ],
+          )),
+          DataCell(Row(
+            children: [
+              Icon(Icons.access_time), // Icon for time
+              SizedBox(width: 8), // Add spacing between icon and text
+              Text(info.time), // Display time
+            ],
+          )),
+        ]);
+      }).toList(),
+    );
+  }
+}
+
+class OrderShowScreenPagenationBar extends GetView<OrderShowScreenController> {
   const OrderShowScreenPagenationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(OrderShowScreenController());
     return SizedBox(
       height: Get.height * 0.08,
       width: Get.width * 0.84,
@@ -116,21 +178,25 @@ class OrderShowScreenPagenationBar extends StatelessWidget {
             color: lighPurple),
         child: LayoutBuilder(
           builder: (context, size) {
-            Widget pagenationButtonStyle(String icon, String label) {
-              return SizedBox(
-                width: size.maxWidth * 0.28,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: size.maxHeight * 0.1),
-                    SizedBox(
-                        height: size.maxHeight * 0.45,
-                        child: SvgPicture.string(icon)),
-                    AText(
-                      label,
-                      fontFamily: 'ScriptMT',
-                    )
-                  ],
+            Widget pagenationButtonStyle(
+                String icon, String label, OrderShowScreenShowMode showMode) {
+              return InkWell(
+                onTap: () => controller.updateShowMode(showMode),
+                child: SizedBox(
+                  width: size.maxWidth * 0.28,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: size.maxHeight * 0.1),
+                      SizedBox(
+                          height: size.maxHeight * 0.45,
+                          child: SvgPicture.string(icon)),
+                      AText(
+                        label,
+                        fontFamily: 'ScriptMT',
+                      )
+                    ],
+                  ),
                 ),
               );
             }
@@ -138,9 +204,12 @@ class OrderShowScreenPagenationBar extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                pagenationButtonStyle(MyIcon.details, "Details"),
-                pagenationButtonStyle(MyIcon.phases, "Phases"),
-                pagenationButtonStyle(MyIcon.appointments, "appointments"),
+                pagenationButtonStyle(
+                    MyIcon.details, "Details", OrderShowScreenShowMode.details),
+                pagenationButtonStyle(
+                    MyIcon.phases, "Phases", OrderShowScreenShowMode.phases),
+                pagenationButtonStyle(MyIcon.appointments, "appointments",
+                    OrderShowScreenShowMode.appointments),
               ],
             );
           },
@@ -155,21 +224,29 @@ class MainWidgetToSwapChildren extends GetView<OrderShowScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(OrderShowScreenController());
     return Padding(
       padding: EdgeInsets.only(top: Get.width * 0.040),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: Get.width * 0.075),
         child: SizedBox(
             height: Get.height * 0.5,
-            child: true
-                ? PhasesWidget(
-                    phases: [
-                      'Cut',
-                      'Plot',
-                      'Assemble',
-                    ],
-                  )
-                : OrderDetailsShowWidget()),
+            child: Obx(() {
+              switch (controller.showMode.value) {
+                case OrderShowScreenShowMode.details:
+                  return const OrderDetailsShowWidget();
+
+                case OrderShowScreenShowMode.phases:
+                  return PhasesWidget(
+                    phases: controller.orderDetails.phasesInfo,
+                  );
+                case OrderShowScreenShowMode.appointments:
+                  return AppointmentsWidgetShow();
+              }
+              return Container(
+                child: Text('ERROR'),
+              );
+            })),
       ),
     );
   }
@@ -285,45 +362,4 @@ class OrderDetailsShowWidget extends GetView<OrderShowScreenController> {
       ],
     );
   }
-}
-
-class OrderShowScreenController extends GetxController {
-  late OrderDetails orderDetails;
-
-  @override
-  void onInit() async {
-    // TODO: implement onInit
-    super.onInit();
-    orderDetails = await OrderShowScreenModel.getOrderDetails();
-  }
-}
-
-class OrderShowScreenModel {
-  static Future<OrderDetails> getOrderDetails() async {
-    OrderDetails myOrder;
-    await Future.delayed(Duration(seconds: 2));
-    myOrder = OrderDetails(
-        imageURL: '',
-        clientName: 'clientName',
-        clientPhone: '0982154430',
-        size: '38',
-        fabricType: 'cotton',
-        height: 'Short',
-        color: 'Purple');
-
-    return myOrder;
-  }
-}
-
-class OrderDetails {
-  String imageURL, clientName, clientPhone, size, fabricType, height, color;
-
-  OrderDetails(
-      {required this.imageURL,
-      required this.clientName,
-      required this.clientPhone,
-      required this.size,
-      required this.fabricType,
-      required this.height,
-      required this.color});
 }

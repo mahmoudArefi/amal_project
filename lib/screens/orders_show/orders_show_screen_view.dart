@@ -31,12 +31,12 @@ class OrdersShowScreen extends StatelessWidget {
   }
 }
 
-class OrderShowScreenFooter extends GetView<OrderShowScreenController> {
+class OrderShowScreenFooter extends GetView<OrdersShowScreenController> {
   const OrderShowScreenFooter({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(OrderShowScreenController());
+    Get.put(OrdersShowScreenController());
     return Expanded(
       child: Align(
         alignment: Alignment.center,

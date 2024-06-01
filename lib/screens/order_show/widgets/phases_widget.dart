@@ -6,7 +6,7 @@ import 'package:untitled5/common/extension/ui_extension.dart';
 import 'package:untitled5/public_files/const.dart';
 
 class PhasesWidget extends StatefulWidget {
-  final List<String> phases;
+  final List<PhaseInfo> phases;
 
   PhasesWidget({required this.phases});
 
@@ -22,87 +22,93 @@ class _PhasesWidgetState extends State<PhasesWidget> {
   @override
   void initState() {
     super.initState();
-    _isChecked = List<bool>.filled(widget.phases.length, false);
+    //_isChecked = List<bool>.filled(widget.phases.length, false);
+    _isChecked = widget.phases.map((e) => e.isDone).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return
-       Column(
-        children: widget.phases.asMap().entries.map((entry) {
-          int index = entry.key;
-          String phase = entry.value;
-          return SizedBox(
-            height: Get.height*0.1,
-            child: LayoutBuilder(
-              builder: (context, size) =>Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: size.maxHeight*0.55, // Adjust the width as needed
-                        height: size.maxHeight*0.55, // Adjust the height as needed
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: purple1, // Border color
-                            width: 1.5, // Border width
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(color: purple1),
-                          ),
+    return Column(
+      children: widget.phases
+          .map((e) => e.label)
+          .toList()
+          .asMap()
+          .entries
+          .map((entry) {
+        int index = entry.key;
+        String phase = entry.value;
+        return SizedBox(
+          height: Get.height * 0.1,
+          child: LayoutBuilder(
+            builder: (context, size) => Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: size.maxHeight * 0.55,
+                      // Adjust the width as needed
+                      height: size.maxHeight * 0.55,
+                      // Adjust the height as needed
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: purple1, // Border color
+                          width: 1.5, // Border width
                         ),
                       ),
-                      SizedBox(width: size.maxWidth*0.04),
-                      Text(phase),
-                      SizedBox(width: size.maxWidth*0.04),
-
-                      Expanded(
-                        child: _isChecked[index]?Row(
-                          children: [
-                            CustomPaint(
-                              //size: Size(, 1),
-                              painter: DashedLinePainter(),
-                            ).test(),
-                            Icon(Icons.arrow_right),
-                          ],
-                        ):Container(),
-                      ) ,
-
-                      Checkbox(
-                        value: _isChecked[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isChecked[index] = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  if (index < widget.phases.length - 1)
-                    Padding(
-                      padding:  EdgeInsets.only(left: size.maxWidth*0.015),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          margin:  EdgeInsets.only(left: size.maxWidth*0.05),
-                          child: CustomPaint(
-                            size: Size(1, size.maxHeight*0.34),
-                            painter: DashedLinePainter(),
-                          ),
+                      child: Center(
+                        child: Text(
+                          '${index + 1}',
+                          style: const TextStyle(color: purple1),
                         ),
                       ),
                     ),
-                ],
-              ),
+                    SizedBox(width: size.maxWidth * 0.04),
+                    Text(phase),
+                    SizedBox(width: size.maxWidth * 0.04),
+                    Expanded(
+                      child: _isChecked[index]
+                          ? Row(
+                              children: [
+                                CustomPaint(
+                                  //size: Size(, 1),
+                                  painter: DashedLinePainter(),
+                                ).test(),
+                                Icon(Icons.arrow_right),
+                              ],
+                            )
+                          : Container(),
+                    ),
+                    Checkbox(
+                      value: _isChecked[index],
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isChecked[index] = value!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                if (index < widget.phases.length - 1)
+                  Padding(
+                    padding: EdgeInsets.only(left: size.maxWidth * 0.015),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: EdgeInsets.only(left: size.maxWidth * 0.05),
+                        child: CustomPaint(
+                          size: Size(1, size.maxHeight * 0.34),
+                          painter: DashedLinePainter(),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          );
-        }).toList(),
-       )
-     ;
+          ),
+        );
+      }).toList(),
+    );
   }
 }
 
@@ -121,4 +127,11 @@ class DashedLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class PhaseInfo {
+  String label;
+  bool isDone;
+
+  PhaseInfo(this.label, this.isDone);
 }
