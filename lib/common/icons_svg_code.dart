@@ -51,4 +51,36 @@ class MyIcon {
 ''';
 
 
+  static String star = '''<svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19">
+  <path id="ic_star_half_24px" d="M22,9.24l-7.19-.62L12,2,9.19,8.63,2,9.24l5.46,4.73L5.82,21,12,17.27,18.18,21l-1.63-7.03ZM12,15.4V6.1l1.71,4.04,4.38.38L14.77,13.4l1,4.28Z" transform="translate(-2 -2)" fill="#f1f1f1"/>
+</svg>
+''';
+
+  static String homeIcon = '''<svg xmlns="http://www.w3.org/2000/svg" width="28.125" height="22.359" viewBox="0 0 28.125 22.359">
+  <path id="ic_home_24px" d="M11.2,23V15.941h4.6V23h5.75V13.588H25L13.5,3,2,13.588H5.45V23Z" transform="translate(0.562 -1.641)" fill="none" stroke="#664f6c" stroke-width="2"/>
+</svg>
+''';
+
+  static String profileIcon = '''<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <path id="ic_perm_identity_24px" d="M15,6.612A2.888,2.888,0,1,1,12.113,9.5,2.887,2.887,0,0,1,15,6.612m0,12.375c4.084,0,8.387,2.008,8.387,2.888v1.513H6.612V21.875c0-.88,4.3-2.888,8.388-2.888M15,4a5.5,5.5,0,1,0,5.5,5.5A5.5,5.5,0,0,0,15,4Zm0,12.375c-3.671,0-11,1.842-11,5.5V26H26V21.875C26,18.218,18.671,16.375,15,16.375Z" transform="translate(-4 -4)" fill="#664f6c"/>
+</svg>
+''';
+
+  static String logout = '''<svg xmlns="http://www.w3.org/2000/svg" width="23" height="18.98" viewBox="0 0 23 18.98">
+  <path id="ic_input_24px" d="M3.091,3.01H21.909A2.107,2.107,0,0,1,24,5.121V9.333H21.909V5.1H3.091V19.91H21.909V15.667H24V19.9a2.089,2.089,0,0,1-2.091,2.09H3.091A2.089,2.089,0,0,1,1,19.9V5.121A2.1,2.1,0,0,1,3.091,3.01ZM13.545,16.722,9.364,12.5l4.182-4.222v3.167H24v2.111H13.545Z" transform="translate(-1 -3.01)" fill="#664f6c"/>
+</svg>
+''';
+
+
+  static String goBackArrowIcon = '''<svg xmlns="http://www.w3.org/2000/svg" width="12.41" height="17" viewBox="0 0 12.41 17">
+  <path id="ic_chevron_left_24px" d="M20.41,8,18.049,6,8,14.5,18.049,23l2.361-2-7.67-6.5Z" transform="translate(-8 -6)" fill="#946ca0"/>
+</svg>
+''';
+
+
+  static String drawerIcon = '''<svg xmlns="http://www.w3.org/2000/svg" width="26" height="22.75" viewBox="0 0 26 22.75">
+  <path id="ic_view_headline_24px" d="M30,21.25H4V18H30Zm0,6.5H4V24.5H30Zm0-13H4V11.5H30ZM30,5V8.25H4V5Z" transform="translate(-4 -5)" fill="#664f6c"/>
+</svg>
+''';
+
 }

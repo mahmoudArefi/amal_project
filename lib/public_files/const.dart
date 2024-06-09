@@ -19,3 +19,5 @@ const Color lighPurple =Color(0xFFE1BEE7);
 
 
 //new colors
+//const Color gray = Color(0xffF1F1F1);
+const Color myPurple = Color(0xff664F6C);

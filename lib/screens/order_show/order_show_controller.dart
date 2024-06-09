@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'order_show_model.dart';
 
 class OrderShowScreenController extends GetxController {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   late OrderDetails orderDetails;
 
   Rx<OrderShowScreenShowMode> showMode = OrderShowScreenShowMode.phases.obs;
@@ -16,6 +19,11 @@ class OrderShowScreenController extends GetxController {
 
   updateShowMode(OrderShowScreenShowMode newMode) {
     showMode.value = newMode;
+  }
+
+  openDrawer(){
+    print('hi');
+    scaffoldKey.currentState?.openEndDrawer();
   }
 }
 

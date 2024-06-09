@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled5/common/extension/ui_extension.dart';
+import 'package:untitled5/common/fonts_variable.dart';
 import 'package:untitled5/common/images_path.dart';
 import 'package:untitled5/public_files/const.dart';
 import 'package:untitled5/screens/orders_show/orders_show_screen_controller.dart';
@@ -18,13 +19,18 @@ class OrdersShowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        height: Get.height,
-        child: const Column(
-          children: [
-            OrderShowScreenHeader(),
-            OrderShowScreenFooter(),
-          ],
+      body: SafeArea(
+        child: SizedBox(
+          height: Get.height,
+          child: Column(
+            children: [
+              const OrderShowScreenHeader(),
+              SizedBox(
+                height: Get.height * 0.02,
+              ),
+              const Expanded(child: OrderShowScreenFooter()),
+            ],
+          ),
         ),
       ),
     );
@@ -37,20 +43,25 @@ class OrderShowScreenFooter extends GetView<OrdersShowScreenController> {
   @override
   Widget build(BuildContext context) {
     Get.put(OrdersShowScreenController());
-    return Expanded(
-      child: Align(
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: Get.width * 0.9,
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
           child: Container(
-            decoration: BoxDecoration(
-                color: gray.withOpacity(0.5),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
+            decoration:  BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                color: gray.withOpacity(0.4)),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 5.0.h),
+          child: Align(
+            alignment: Alignment.topCenter,
             child: Obx(() => controller.isDoneLoading.value
                 ? SingleChildScrollView(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: controller.ordersFromBackEnd
                           .map((order) => OrderShowWidget(order))
                           .toList(),
@@ -58,8 +69,8 @@ class OrderShowScreenFooter extends GetView<OrdersShowScreenController> {
                   )
                 : const CircularProgressIndicator()),
           ),
-        ),
-      ),
+        )
+      ],
     );
   }
 }
@@ -72,14 +83,24 @@ class OrderShowScreenHeader extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 240,
+          height: 240.h,
           width: Get.width,
           child: Image.asset(MyImage.orderShowScreenHeaderImage),
         ),
-        const AText(
-          "Here We Will Show Our Orders List",
-          color: dark_purple,
-          fontFamily: 'Bauhaus93',
+        SizedBox(
+          height: 10.h,
+        ),
+        SizedBox(
+          width: Get.width * 0.8,
+          child: const FittedBox(
+            fit: BoxFit.fitWidth,
+            child: AText(
+              "Here We Will Show Our Orders List",
+              fontSize: 20,
+              color: dark_purple,
+              fontFamily: 'Bauhaus93',
+            ),
+          ),
         ),
       ],
     );
@@ -93,79 +114,98 @@ class OrderShowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: Get.height * 0.22,
-      width: Get.width * 0.85,
-      child: Container(
-          decoration: const BoxDecoration(
-              color: gray, borderRadius: BorderRadius.all(Radius.circular(15))),
-          child: LayoutBuilder(builder: (context, size) {
-            Widget orderDetailShow(String icon, String label) {
-              return SizedBox(
-                height: size.maxHeight * 0.15,
-                child: Row(
-                  children: [
-                    SvgPicture.string(icon),
-                    SizedBox(
-                      width: size.maxWidth * 0.03,
-                    ),
-                    AText(
-                      label,
-                    )
-                  ],
-                ),
-              );
-            }
-
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: size.maxWidth * 0.05,
-                  vertical: size.maxHeight * 0.1),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.0.h),
+      child: SizedBox(
+        height: Get.height * 0.22,
+        width: Get.width * 0.85,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 4.0.h),
+          child: Container(
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              child: LayoutBuilder(builder: (context, size) {
+                Widget orderDetailShow(String icon, String label) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 5.0.h),
                     child: SizedBox(
-                      height: size.maxHeight * 0.8,
-                      width: size.maxWidth * 0.34,
-                      child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.asset(orderDetails.imageURU)),
-                    ),
-                  ),
-                  SizedBox(width: size.maxWidth * 0.06),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      orderDetailShow(
-                          MyIcon.orderNameIcon, orderDetails.orderName),
-                      orderDetailShow(
-                          MyIcon.deliverDataIcon, orderDetails.deliverData),
-                      orderDetailShow(
-                          MyIcon.appointmentIcon, orderDetails.appointments),
-                      SizedBox(
-                        height: size.maxHeight * 0.1,
-                      ),
-                      Row(
+                      height: size.maxHeight * 0.15,
+                      child: Row(
                         children: [
-                          CustomToggleButton(),
-                          SeeMoreSentinse()
+                          SvgPicture.string(icon),
+                          SizedBox(
+                            width: size.maxWidth * 0.03,
+                          ),
+                          AText(
+                            label,
+                            fontFamily: MyFont.bahnschrift,
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.maxWidth * 0.05,
+                      vertical: size.maxHeight * 0.1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: SizedBox(
+                          height: size.maxHeight * 0.8,
+                          width: size.maxWidth * 0.34,
+                          child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Image.asset(orderDetails.imageURU)),
+                        ),
+                      ),
+                      SizedBox(width: size.maxWidth * 0.06),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          orderDetailShow(
+                              MyIcon.orderNameIcon, orderDetails.orderName),
+                          orderDetailShow(
+                              MyIcon.deliverDataIcon, orderDetails.deliverData),
+                          orderDetailShow(MyIcon.appointmentIcon,
+                              orderDetails.appointments),
+                          SizedBox(
+                            height: size.maxHeight * 0.1,
+                          ),
+                          SizedBox(
+                            width: size.maxWidth * 0.5,
+                            child:  Row(
+                              children: [
+
+                                     CustomToggleButton(),
+                                Spacer(),
+                                SeeMoreSentinse()
+                              ],
+                            ),
+                          )
                         ],
                       )
                     ],
-                  )
-                ],
-              ),
-            );
-          })),
+                  ),
+                );
+              })),
+        ),
+      ),
     );
   }
 }
 
 class CustomToggleButton extends StatefulWidget {
+  const CustomToggleButton({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _CustomToggleButtonState createState() => _CustomToggleButtonState();
 }
 
@@ -180,38 +220,45 @@ class _CustomToggleButtonState extends State<CustomToggleButton> {
           isActive = !isActive;
         });
       },
-      child: Container(
-        width: 60.0,
-        height: 30.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          color: isActive ? Colors.green : Colors.grey,
-          border: Border.all(
-            color: Colors.black,
-            width: 2.0,
-          ),
-        ),
-        child: Stack(
-          children: <Widget>[
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 250),
-              curve: Curves.easeIn,
-              left: isActive ? 30.0 : 0.0,
-              right: isActive ? 0.0 : 30.0,
-              child: Container(
-                width: 28.0,
-                height: 28.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
+      child: SizedBox(
+        width: Get.width*0.15,
+          height: Get.height*0.03,
+        child: LayoutBuilder(
+          builder:(context, size)=> Container(
+            width: size.maxWidth,
+            height: size.maxHeight,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              color: isActive ? purple.withOpacity(0.6): Colors.white,
+              border: Border.all(
+                color: myPurple,
+                width: 2.0,
               ),
             ),
-          ],
+            child: Stack(
+              children: <Widget>[
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeIn,
+                 left: isActive ? size.maxWidth*0.5 : size.maxWidth*0.0,
+               right: isActive ? size.maxWidth*0.0 : size.maxWidth*0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: SizedBox(
+                      width: size.maxHeight*0.0,
+                      height:size.maxHeight*0.75,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: myPurple,
+                        ),
+                      ),
+                    ),
+                  ) ,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -225,13 +272,16 @@ class SeeMoreSentinse extends StatelessWidget {
   Widget build(BuildContext context) {
     // Define the styles
     TextStyle defaultStyle = TextStyle(
+      fontFamily: MyFont.Bauhaus93,
       color: Colors.black,
-      fontSize: 20,
+      fontSize: 16.sp,
     );
 
     TextStyle highlightedStyle = TextStyle(
       color: Colors.purple, // Assume you have defined a color named purple
-      fontSize: 20,
+      fontFamily: MyFont.Bauhaus93,
+
+      fontSize: 16.sp,
       fontWeight: FontWeight.bold,
     );
 
@@ -255,4 +305,3 @@ class SeeMoreSentinse extends StatelessWidget {
     );
   }
 }
-

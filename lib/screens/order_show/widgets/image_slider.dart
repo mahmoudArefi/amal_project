@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled5/public_files/const.dart';
 
 class MyImageSlider extends StatefulWidget {
   final List<String> images;
@@ -56,7 +57,7 @@ class _MyImageSliderState extends State<MyImageSlider> {
               child: CircleAvatar(
                 radius: 6.0,
                 backgroundColor:
-                    _currentPage == index ? Colors.blue : Colors.grey,
+                    _currentPage == index ?  purple : light_purple,
               ),
             );
           }),

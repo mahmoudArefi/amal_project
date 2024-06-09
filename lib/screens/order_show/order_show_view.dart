@@ -10,6 +10,8 @@ import 'package:untitled5/common/fonts_variable.dart';
 
 import 'package:untitled5/common/widgets/a_text.dart';
 import 'package:untitled5/screens/order_show/order_show_controller.dart';
+import 'package:untitled5/screens/order_show/widgets/bottom_bar.dart';
+import 'package:untitled5/screens/order_show/widgets/drawer.dart';
 import 'package:untitled5/screens/order_show/widgets/image_slider.dart';
 import 'package:untitled5/screens/order_show/widgets/phases_widget.dart';
 
@@ -24,17 +26,44 @@ class OrderShow extends GetView<OrderShowScreenController> {
   Widget build(BuildContext context) {
     Get.put(OrderShowScreenController());
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: Get.height * 0.4,
-            child: MyImageSlider(
-              images: controller.orderDetails.imagesURL,
+      endDrawer: OrdersShowScreenDrawer(),
+      key: controller.scaffoldKey,
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(
+              height: Get.height * 0.06,
+              width: Get.width,
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.08),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SvgPicture.string(MyIcon.goBackArrowIcon),
+                      InkWell(
+                          onTap: controller.openDrawer,
+                          child: SvgPicture.string(MyIcon.drawerIcon)),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          const OrderShowScreenPagenationBar(),
-          const MainWidgetToSwapChildren()
-        ],
+            SizedBox(
+              height: Get.height * 0.306,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: MyImageSlider(
+                  images: controller.orderDetails.imagesURL,
+                ),
+              ),
+            ),
+            const OrderShowScreenPagenationBar(),
+            const Expanded(child: MainWidgetToSwapChildren()),
+          ],
+        ),
       ),
     );
   }
@@ -86,36 +115,42 @@ class AppointmentsWidgetShow extends StatelessWidget {
           );
         }
 
-        return Column(
-          children: [
-            myRow('Delivery Date', 'test'),
-            myRow('Appointment', 'test '),
-            Divider(
-              thickness: 3,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                  width: size.maxWidth*0.5 ,
-                  height: size.maxHeight*0.08,
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: AText(
-                      'Previous Appointments',
-                      fontFamily: MyFont.bahnschrift,
-                      fontSize: 10,
-                      //fontWeight :FontWeight.bold
-                    ),
-                  )),
-            ),
-            MyAppointmentsTable(
-              appointments: [
-                AppointmentInfo(date: '2024-06-01', time: '10:00 AM'),
-                AppointmentInfo(date: '2024-06-02', time: '2:30 PM'),
-                // Add more appointment data here
-              ],
-            ),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              myRow('Delivery Date', 'test'),
+              myRow('Appointment', 'test '),
+              Divider(
+                thickness: 3,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                    width: size.maxWidth * 0.5,
+                    height: size.maxHeight * 0.08,
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: AText(
+                        'Previous Appointments',
+                        fontFamily: MyFont.bahnschrift,
+                        fontSize: 10,
+                        //fontWeight :FontWeight.bold
+                      ),
+                    )),
+              ),
+              MyAppointmentsTable(
+                appointments: [
+                  AppointmentInfo(date: '2024-06-01', time: '10:00 AM'),
+                  AppointmentInfo(date: '2024-06-02', time: '2:30 PM'),
+                  AppointmentInfo(date: '2024-06-01', time: '10:00 AM'),
+                  AppointmentInfo(date: '2024-06-02', time: '2:30 PM'),
+                  AppointmentInfo(date: '2024-06-01', time: '10:00 AM'),
+                  AppointmentInfo(date: '2024-06-02', time: '2:30 PM'),
+                  // Add more appointment data here
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
@@ -179,27 +214,40 @@ class OrderShowScreenPagenationBar extends GetView<OrderShowScreenController> {
         child: LayoutBuilder(
           builder: (context, size) {
             Widget pagenationButtonStyle(
-                String icon, String label, OrderShowScreenShowMode showMode) {
-              return InkWell(
+                String icon, String label, OrderShowScreenShowMode showMode) => InkWell(
                 onTap: () => controller.updateShowMode(showMode),
                 child: SizedBox(
                   width: size.maxWidth * 0.28,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: size.maxHeight * 0.1),
-                      SizedBox(
-                          height: size.maxHeight * 0.45,
-                          child: SvgPicture.string(icon)),
-                      AText(
-                        label,
-                        fontFamily: 'ScriptMT',
-                      )
-                    ],
+                  child: Obx(
+                    () {
+                      Color itemsColor = controller.showMode.value == showMode
+                          ? drawer
+                          : black;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: size.maxHeight * 0.1),
+                          SizedBox(
+                              height: size.maxHeight * 0.45,
+                              child: SvgPicture.string(
+                                icon,
+                                color: itemsColor,
+                              )),
+                          SizedBox(
+                            height: size.maxHeight * 0.45,
+                            child: AText(
+                              label,
+                              fontSize: 14.sp,
+                              color: itemsColor,
+                              fontFamily: 'ScriptMT',
+                            ),
+                          )
+                        ],
+                      );
+                    },
                   ),
                 ),
               );
-            }
 
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -231,22 +279,38 @@ class MainWidgetToSwapChildren extends GetView<OrderShowScreenController> {
         padding: EdgeInsets.symmetric(horizontal: Get.width * 0.075),
         child: SizedBox(
             height: Get.height * 0.5,
-            child: Obx(() {
-              switch (controller.showMode.value) {
-                case OrderShowScreenShowMode.details:
-                  return const OrderDetailsShowWidget();
+            child: Stack(
+              children: [
+                Obx(() {
+                  switch (controller.showMode.value) {
+                    case OrderShowScreenShowMode.details:
+                      return const OrderDetailsShowWidget();
 
-                case OrderShowScreenShowMode.phases:
-                  return PhasesWidget(
-                    phases: controller.orderDetails.phasesInfo,
+                    case OrderShowScreenShowMode.phases:
+                      return PhasesWidget(
+                        phases: controller.orderDetails.phasesInfo,
+                      );
+                    case OrderShowScreenShowMode.appointments:
+                      return AppointmentsWidgetShow();
+                  }
+                  return Container(
+                    child: Text('ERROR'),
                   );
-                case OrderShowScreenShowMode.appointments:
-                  return AppointmentsWidgetShow();
-              }
-              return Container(
-                child: Text('ERROR'),
-              );
-            })),
+                }),
+                Obx(
+                  () => Visibility(
+                    visible: controller.showMode.value !=
+                        OrderShowScreenShowMode.details,
+                    child: Column(
+                      children: [
+                        Expanded(child: Container()),
+                        MyBottomBar() ,
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            )),
       ),
     );
   }

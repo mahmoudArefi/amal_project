@@ -108,7 +108,7 @@ class SenderWidget extends GetView<ChatScreenController> {
                     fillColor: purple1,
                     filled: true,
                     hintText: "Write",
-                    hintStyle: TextStyle(color: light_purple),
+                    hintStyle: const TextStyle(color: light_purple),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
                       borderSide: BorderSide.none, // Remove the border color

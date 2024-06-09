@@ -8,6 +8,13 @@ class OrdersShowScreenModel {
         deliverData: '11/4/2021',
         appointments: '11/4/2022',
         isOrderReady: true));
+    orders.add(OrderOverViewDetails(
+        imageURU: 'assets/images/img.png',
+        orderName: "mahmoud arefi",
+        deliverData: '11/4/2021',
+        appointments: '11/4/2022',
+        isOrderReady: true));
+
     return orders;
   }
 }
